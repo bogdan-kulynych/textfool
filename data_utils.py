@@ -26,7 +26,7 @@ def extract_features(docs, max_length):
 
 
 def load_twitter_gender_data(from_cache=False):
-    cached_data_path = './data/~twitter_gender_data.pkl'
+    cached_data_path = raw_data_path + '.cached.pkl'
 
     if from_cache:
         print('Loading data from cache...')

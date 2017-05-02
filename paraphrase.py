@@ -92,11 +92,14 @@ def _generate_synonym_candidates(doc, disambiguate=False, rank_fn=None):
     '''
     Generate synonym candidates.
 
-    For each token in the doc, the sense is disambiguated using
-    lesk algorithm, and then the list of WordNet synonyms is expanded for
-    that sense. Since the goal is fool the embedding-based classifier,
-    the synonyms are ranked by their GloVe similarity* to the original
-    token by default.
+    For each token in the doc, the list of WordNet synonyms is expanded.
+    the synonyms are then ranked by their GloVe similarity to the original
+    token and a context window around the token.
+
+    :param disambiguate: Whether to use lesk sense disambiguation before
+            expanding the synonyms.
+    :param rank_fn: Functions that takes (doc, original_token, synonym) and
+            returns a similarity score
     '''
     if rank_fn is None:
         rank_fn=vsm_similarity
@@ -167,16 +170,19 @@ def perturb_text(
         halt_condition_fn=None,
         verbose=False):
     '''
-    Perturb the text using WordNet-based thesaurus
+    Perturb the text by replacing some words with their WordNet synonyms,
+    sorting by GloVe similarity between the synonym and the original context
+    window, and optional heuristic.
 
-    :param doc: Document to perturb
+    :param doc: Document to perturb.
     :type doc: spacy.tokens.doc.Doc
-    :param rank_fn: Ranks the best synonyms by their (dis)similarity to
-            the original token
-    :param heuristic_fn: Ranks the best synonyms using the heuristic
+    :param rank_fn: See `_generate_synonym_candidates``.
+    :param heuristic_fn: Ranks the best synonyms using the heuristic.
+            If the value of the heuristic is negative, the candidate
+            substitution is rejected.
     :param halt_condition_fn: Returns true when the perturbation is
-            satisfactory
-    :param verbose: Whether to output info about candidates
+            satisfactory enough.
+    :param verbose:
 
     '''
 

@@ -14,8 +14,8 @@ nlp = spacy.load('en', tagger=False, entity=False)
 
 class ForwardGradWrapper:
     '''
-    Utility class that computes the gradient of model probability
-    output wrt input
+    Utility class that computes the gradient of model probability output
+    with respect to model input.
     '''
 
     def __init__(self, model):
@@ -54,7 +54,7 @@ _stats_probability_shifts = []
 def adversarial_paraphrase(doc, grad_guide, target, max_length=1000,
                            verbose=False):
     '''
-    Compute greedy synonymity perturbation, choosing the synonyms maximizing
+    Compute a perturbation, greedily choosing the synonyms by maximizing
     the forward derivative of the model towards target class.
     '''
 
@@ -80,8 +80,9 @@ def adversarial_paraphrase(doc, grad_guide, target, max_length=1000,
 
     def heuristic_fn(text, candidate):
         '''
-        Return difference between forward derivative of original word and
-        candidate substitute synonym, amplified by synonym relevance rank.
+        Return the difference between the forward derivative of the original
+        word and the candidate substitute synonym, amplified by synonym
+        relevance rank.
 
         Yes, this one is pretty bad in terms of performance.
         '''
