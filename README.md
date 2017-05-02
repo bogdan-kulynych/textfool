@@ -1,8 +1,8 @@
-# Realistic-looking adversarial examples for text classification
+# Plausibly looking adversarial examples for text classification
 
 ![Examples of adversarial examples](images/examples.png)
 
-Well, kind of realistic-looking. This is a proof of concept showing "imperceptible" adversarial examples for text classifiers.
+Well, kind of. This is a proof of concept showing "imperceptible" [adversarial examples](https://blog.openai.com/adversarial-example-research/) for text classifiers.
 
 
 ## Setup
