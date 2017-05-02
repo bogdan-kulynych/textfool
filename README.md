@@ -2,7 +2,7 @@
 
 ![Examples of adversarial examples](images/examples.png)
 
-Well, kind of realistic-looking.
+Well, kind of realistic-looking. This is a proof of concept showing the "imperceptible" adversarial examples on text classifiers.
 
 
 ## Setup
@@ -27,8 +27,6 @@ pip install -r requirements.txt
 * NLTK datasets (a prompt will appear upon running `paraphrase.py`)
 
 ## Model
-Uses Keras, SpaCy, and sklearn
-
 To train using default parameters simply run
 ```
 python run_training.py
@@ -49,7 +47,7 @@ Success rate for crafting the adversarial example should be about 17%.
 By default the script will write the crafted examples into `./data/adversarial_texts.csv`.
 
 ## Paraphrasing
-This module is rather reusable, although not immensely useful for anything practical. It provides a function that "paraphrases" a text by substituting some words with their WordNet synonyms, sorting by GloVe similarity between the synonym and original context window. Relies on SpaCy and NLTK.
+This module is rather reusable, although not immensely useful for anything practical. It provides a function that "paraphrases" a text by replacing some words with their WordNet synonyms, sorting by GloVe similarity between the synonym and the original context window. Relies on SpaCy and NLTK.
 
 Example of paraphrase:
 
