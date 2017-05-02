@@ -52,4 +52,5 @@ By default the script will write the crafted examples into `./data/adversarial_t
 This module is rather reusable, although not immensely useful for anything practical. It provides a function that "paraphrases" a text by substituting some words with their WordNet synonyms, sorting by GloVe similarity between the synonym and original context window. Relies on SpaCy and NLTK.
 
 Example of paraphrase:
-![](images/paraphrase_example.png)
+
+![Paraphrase example](images/paraphrase_example.png)
