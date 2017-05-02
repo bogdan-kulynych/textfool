@@ -79,8 +79,6 @@ def _synonym_prefilter_fn(token, synonym):
     '''
     Similarity heuristics go here
     '''
-    # (token.similarity(synonym) < 0.1) or
-
     if  (len(synonym.text.split()) > 2) or \
         (synonym.lemma == token.lemma) or \
         (synonym.tag != token.tag) or \
