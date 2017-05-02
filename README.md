@@ -1,4 +1,4 @@
-# Plausibly looking adversarial examples for text classification
+# Plausible looking adversarial examples for text classification
 
 ![Examples of adversarial examples](images/examples.png)
 
