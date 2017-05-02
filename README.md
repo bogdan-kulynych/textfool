@@ -2,7 +2,7 @@
 
 ![Examples of adversarial examples](images/examples.png)
 
-Well, kind of realistic-looking. This is a proof of concept showing the "imperceptible" adversarial examples for text classifiers.
+Well, kind of realistic-looking. This is a proof of concept showing "imperceptible" adversarial examples for text classifiers.
 
 
 ## Setup
