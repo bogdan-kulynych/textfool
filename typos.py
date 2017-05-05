@@ -48,11 +48,18 @@ def get_keyboard_miss_typos(word):
             'cqt', 'car', 'caf', 'cag', 'cay', 'ca6', 'ca5' \
         }
     True
+    >>> get_keyboard_miss_typos('Cat') == { \
+            'Xat', 'Vat', 'Fat', 'Dat', 'Czt', 'Cst', 'Cwt', \
+            'Cqt', 'Car', 'Caf', 'Cag', 'Cay', 'Ca6', 'Ca5' \
+        }
+    True
     '''
     typos = set()
     for i in range(len(word)):
-        replacements = KEY_MISHITS_MAP[word[i]]
+        replacements = KEY_MISHITS_MAP.get(word[i].lower()) or []
         for replacement in replacements:
+            if word[i].isupper():
+                replacement = replacement.upper()
             typo = word[:i] + replacement + word[i+1:]
             typos.add(typo)
     return typos
@@ -92,4 +99,16 @@ def get_double_letter_typos(word):
         typo = word[:i] + word[i] + word[i:]
         typos.add(typo)
     return typos
+
+
+def typos(word):
+    '''
+    >>> isinstance(typos('cat'), set)
+    >>> len(typos('cat')) > 0
+    '''
+    sets = [get_keyboard_miss_typos(word),
+            get_mixed_letter_typos(word),
+            get_double_letter_typos(word),
+            get_missing_letter_typos(word)]
+    return set.union(*sets)
 

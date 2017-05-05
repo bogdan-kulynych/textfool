@@ -1,13 +1,17 @@
 import attr
 import nltk
 import spacy
+
+from collections import OrderedDict
+from functools import partial
+
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 from nltk.corpus import wordnet as wn
 from pywsd.lesk import simple_lesk as disambiguate
 
-from collections import OrderedDict
-from functools import partial
+from typos import typos
+
 
 nlp = spacy.load('en')
 
@@ -88,7 +92,7 @@ def _synonym_prefilter_fn(token, synonym):
         return True
 
 
-def _generate_synonym_candidates(doc, disambiguate=False, rank_fn=None):
+def _generate_synonym_candidates(doc, disambiguate=True, rank_fn=None):
     '''
     Generate synonym candidates.
 
@@ -108,18 +112,16 @@ def _generate_synonym_candidates(doc, disambiguate=False, rank_fn=None):
     for position, token in enumerate(doc):
         if token.tag_ in supported_pos_tags:
             wordnet_pos = _get_wordnet_pos(token)
+            wordnet_synonyms = []
             if disambiguate:
                 try:
-                   synset = disambiguate(
+                    synset = disambiguate(
                            doc.text, token.text, pos=wordnet_pos)
+                    wordnet_synonyms = synset.lemmas()
                 except:
                     continue
-                if synset is None:
-                    continue
-                wordnet_synonyms = synset.lemmas()
             else:
                 synsets = wn.synsets(token.text, pos=wordnet_pos)
-                wordnet_synonyms = []
                 for synset in synsets:
                     wordnet_synonyms.extend(synset.lemmas())
 
@@ -132,6 +134,7 @@ def _generate_synonym_candidates(doc, disambiguate=False, rank_fn=None):
                               synonyms)
             synonyms = reversed(sorted(synonyms,
                                 key=partial(rank_fn, doc, token)))
+
             for rank, synonym in enumerate(synonyms):
                 candidate_word = synonym.text
                 candidate = SubstitutionCandidate(
@@ -140,6 +143,23 @@ def _generate_synonym_candidates(doc, disambiguate=False, rank_fn=None):
                         original_token=token,
                         candidate_word=candidate_word)
                 candidates.append(candidate)
+
+        return candidates
+
+
+def _generate_typo_candidates(doc, min_token_length=4, rank=1000):
+    candidates = []
+    for position, token in enumerate(doc):
+        if (len(token)) < min_token_length:
+            continue
+
+        for typo in typos(token.text):
+            candidate = SubstitutionCandidate(
+                    token_position=position,
+                    similarity_rank=rank,
+                    original_token=token,
+                    candidate_word=typo)
+            candidates.append(candidate)
 
     return candidates
 
@@ -165,6 +185,7 @@ def _compile_perturbed_tokens(doc, accepted_candidates):
 
 def perturb_text(
         doc,
+        add_typos=True,
         rank_fn=None,
         heuristic_fn=None,
         halt_condition_fn=None,
@@ -188,17 +209,19 @@ def perturb_text(
 
     heuristic_fn = heuristic_fn or (lambda _, candidate: candidate.similarity_rank)
     halt_condition_fn = halt_condition_fn or (lambda perturbed_text: False)
-    synonym_candidates = _generate_synonym_candidates(doc, rank_fn=rank_fn)
+    candidates = _generate_synonym_candidates(doc, rank_fn=rank_fn)
+    if add_typos:
+        candidates.extend(_generate_typo_candidates(doc))
 
     perturbed_positions = set()
     accepted_candidates = []
     perturbed_text = doc.text
     if verbose:
-        print('Got {} candidates'.format(len(synonym_candidates)))
+        print('Got {} candidates'.format(len(candidates)))
 
     sorted_candidates = zip(
-            map(partial(heuristic_fn, perturbed_text), synonym_candidates),
-            synonym_candidates)
+            map(partial(heuristic_fn, perturbed_text), candidates),
+            candidates)
     sorted_candidates = list(sorted(sorted_candidates,
             key=lambda t: t[0]))
 
@@ -217,11 +240,11 @@ def perturb_text(
                     _compile_perturbed_tokens(doc, accepted_candidates))
 
             if len(sorted_candidates) > 0:
-                _, synonym_candidates = zip(*sorted_candidates)
+                _, candidates = zip(*sorted_candidates)
                 sorted_candidates = zip(
                         map(partial(heuristic_fn, perturbed_text),
-                            synonym_candidates),
-                        synonym_candidates)
+                            candidates),
+                        candidates)
                 sorted_candidates = list(sorted(sorted_candidates,
                         key=lambda t: t[0]))
     return perturbed_text

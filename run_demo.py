@@ -1,4 +1,5 @@
 import csv
+import argparse
 
 import numpy as np
 
@@ -11,8 +12,17 @@ from adversarial_tools import ForwardGradWrapper, adversarial_paraphrase, \
         _stats_probability_shifts
 
 
-model_path = './data/model.dat'
-adversarial_texts_path = './data/adversarial_texts.csv'
+parser = argparse.ArgumentParser(
+        description='Craft adversarial examples for a text classifier.')
+parser.add_argument('--model_path',
+                    help='Path to model weights',
+                    default='./data/model.dat')
+parser.add_argument('--adversarial_texts_path',
+                    help='Path where results will be saved',
+                    default='./data/adversarial_texts.csv')
+parser.add_argument('--test_samples_cap',
+                    help='Amount of test samples to use',
+                    type=int, default=2000)
 
 
 def clean(text):
@@ -23,7 +33,8 @@ def clean(text):
 
 
 if __name__ == '__main__':
-    test_samples_cap = 2000
+    args = parser.parse_args()
+    test_samples_cap = args.test_samples_cap
 
     # Load Twitter gender data
     (_, _, X_test, y_test), (docs_train, docs_test, _) = \
@@ -31,7 +42,7 @@ if __name__ == '__main__':
 
     # Load model from weights
     model = model_config.build_model()
-    model.load_weights(model_path)
+    model.load_weights(args.model_path)
 
     # Initialize the class that computes forward derivatives
     grad_guide = ForwardGradWrapper(model)
@@ -83,7 +94,7 @@ if __name__ == '__main__':
             np.array(_stats_probability_shifts)))
 
     # Save resulting docs in a CSV file
-    with open(adversarial_texts_path, 'w') as handle:
+    with open(args.adversarial_texts_path, 'w') as handle:
         writer = csv.DictWriter(handle,
                 fieldnames=adversarial_text_data[0].keys())
         writer.writeheader()
