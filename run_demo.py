@@ -23,6 +23,9 @@ parser.add_argument('--adversarial_texts_path',
 parser.add_argument('--test_samples_cap',
                     help='Amount of test samples to use',
                     type=int, default=2000)
+parser.add_argument('--use_typos',
+                    help='Whether to use typos for paraphrases',
+                    type=bool, default=False)
 
 
 def clean(text):
@@ -66,7 +69,7 @@ if __name__ == '__main__':
             # If model prediction is correct, and the true class is female,
             # craft adversarial text
             adv_doc, (y, adv_y) = adversarial_paraphrase(
-                    doc, grad_guide, target=1)
+                    doc, grad_guide, target=1, use_typos=args.use_typos)
 
             pred = np.round(adv_y)
             if pred != preds[index]:

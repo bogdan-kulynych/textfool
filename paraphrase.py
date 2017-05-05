@@ -92,7 +92,7 @@ def _synonym_prefilter_fn(token, synonym):
         return True
 
 
-def _generate_synonym_candidates(doc, disambiguate=True, rank_fn=None):
+def _generate_synonym_candidates(doc, disambiguate=False, rank_fn=None):
     '''
     Generate synonym candidates.
 
@@ -185,7 +185,7 @@ def _compile_perturbed_tokens(doc, accepted_candidates):
 
 def perturb_text(
         doc,
-        add_typos=True,
+        use_typos=True,
         rank_fn=None,
         heuristic_fn=None,
         halt_condition_fn=None,
@@ -210,7 +210,7 @@ def perturb_text(
     heuristic_fn = heuristic_fn or (lambda _, candidate: candidate.similarity_rank)
     halt_condition_fn = halt_condition_fn or (lambda perturbed_text: False)
     candidates = _generate_synonym_candidates(doc, rank_fn=rank_fn)
-    if add_typos:
+    if use_typos:
         candidates.extend(_generate_typo_candidates(doc))
 
     perturbed_positions = set()

@@ -52,7 +52,7 @@ _stats_probability_shifts = []
 
 
 def adversarial_paraphrase(doc, grad_guide, target, max_length=1000,
-                           verbose=False):
+                           use_typos=False, verbose=False):
     '''
     Compute a perturbation, greedily choosing the synonyms by maximizing
     the forward derivative of the model towards target class.
@@ -106,6 +106,7 @@ def adversarial_paraphrase(doc, grad_guide, target, max_length=1000,
         return raw_score / rank
 
     perturbed_text = perturb_text(doc,
+            use_typos=use_typos,
             heuristic_fn=heuristic_fn,
             halt_condition_fn=halt_condition_fn,
             verbose=verbose)
