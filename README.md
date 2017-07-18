@@ -1,9 +1,10 @@
 # Plausible looking adversarial examples for text classification
 
+[![DOI](https://zenodo.org/badge/89886473.svg)](https://zenodo.org/badge/latestdoi/89886473)
+
 ![Examples of adversarial examples](images/examples.png)
 
 Well, kind of. This is a proof of concept showing "imperceptible" [adversarial examples](https://blog.openai.com/adversarial-example-research/) for text classifiers.
-
 
 ## Setup
 
@@ -52,3 +53,9 @@ This module is rather reusable, although not immensely useful for anything pract
 Example of paraphrase:
 
 ![Paraphrase example](images/paraphrase_example.png)
+
+
+## Citing notes
+
+Please use [Zenodo link](https://zenodo.org/record/831638) to cite _textfool_. Not that this work is not published, and not peer-reviewed. _textfool_ has no relationship to _"Deep Text Classification Can be Fooled."_ by B. Liang, H. Li, M. Su, P. Bian, X. Li, and W. Shi.
+
