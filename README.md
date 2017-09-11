@@ -2,9 +2,11 @@
 
 [![DOI](https://zenodo.org/badge/89886473.svg)](https://zenodo.org/badge/latestdoi/89886473)
 
-![Examples of adversarial examples](images/examples.png)
+This is a proof of concept aiming at producing "imperceptible" [adversarial examples](https://blog.openai.com/adversarial-example-research/) for text classifiers.
 
-Well, kind of. This is a proof of concept showing "imperceptible" [adversarial examples](https://blog.openai.com/adversarial-example-research/) for text classifiers.
+For instance, this are some adversarial examples produced by this code for a classifier of a tweet author's gender based on the tweet's text:
+
+![Examples of adversarial examples](images/examples.png)
 
 ## Setup
 
