@@ -1,5 +1,7 @@
 # Plausible looking adversarial examples for text classification
 
+**This repository is deprecated. Check out [trickster](https://github.com/spring-epfl/trickster) library and the "[Evading classifiers in discrete domains with provable optimality guarantees](https://arxiv.org/abs/1810.10939)" paper for an evolution and a more mature version of this approach to generating adversarial examples.**
+
 [![DOI](https://zenodo.org/badge/89886473.svg)](https://zenodo.org/badge/latestdoi/89886473)
 
 This is a proof of concept aiming at producing "imperceptible" [adversarial examples](https://blog.openai.com/adversarial-example-research/) for text classifiers.
